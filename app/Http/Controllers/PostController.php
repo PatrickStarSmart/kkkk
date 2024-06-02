@@ -17,7 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
-{    
+{
     /**
      * index
      *
@@ -41,7 +41,7 @@ class PostController extends Controller
     {
         return view('posts.create');
     }
- 
+
     /**
      * store
      *
@@ -52,18 +52,16 @@ class PostController extends Controller
     {
         //validate form
         $this->validate($request, [
-            'image'     => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'title'     => 'required|min:5',
-            'content'   => 'required|min:10'
+            'image'     => 'image|mimes:jpeg,jpg,png|max:2048',
+            'title'     => 'required|min:3',
+            'content'   => 'required|min:3'
         ]);
 
         //upload image
         $image = $request->file('image');
-        $image->storeAs('public/posts', $image->hashName());
 
         //create post
         Post::create([
-            'image'     => $image->hashName(),
             'title'     => $request->title,
             'content'   => $request->content
         ]);
@@ -71,7 +69,7 @@ class PostController extends Controller
         //redirect to index
         return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
-    
+
     /**
      * show
      *
@@ -101,7 +99,7 @@ class PostController extends Controller
         //render view with post
         return view('posts.edit', compact('post'));
     }
-        
+
     /**
      * update
      *
@@ -114,8 +112,8 @@ class PostController extends Controller
         //validate form
         $this->validate($request, [
             'image'     => 'image|mimes:jpeg,jpg,png|max:2048',
-            'title'     => 'required|min:5',
-            'content'   => 'required|min:10'
+            'title'     => 'required|min:3',
+            'content'   => 'required|min:3'
         ]);
 
         //get post by ID
